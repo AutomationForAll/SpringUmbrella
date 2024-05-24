@@ -18,75 +18,69 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
+import learnjava.springrestful.dto.StudentDto;
 import learnjava.springrestful.entities.Student;
-import learnjava.springrestful.service.StudentService;
+import learnjava.springrestful.service.StudentServiceImpl;
 
 @RestController
 
 public class StudentController {
 
 	@Autowired
-	StudentService studentService;
+	StudentServiceImpl studentService;
 
-	@PostMapping(path = {"/studnet"})
-	public Student insertStudent(@RequestBody Student s) {
+	@PostMapping(path = { "/studnet" })
+	public StudentDto insertStudent(@Valid @RequestBody StudentDto studentDto) {
 
-		Student student = studentService.addStudent(s);
-		return student;
+		StudentDto student = studentService.addStudent(studentDto);
+		return studentDto;
 
 	}
-	
+
 	@GetMapping("/test")
 	public String getTest() {
-		
+
 		return "this is the first";
 	}
-	
+
 	@GetMapping("/student/{id}")
-	public Optional<Student> getStudent(@PathVariable(value = "id") int id) {
-		
-		Optional<Student> fetchStudnet = studentService.fetchStudnet(id);
-		return fetchStudnet;
-		
+	public List<StudentDto> getStudent(@PathVariable(value = "id") int id) {
+
+		return studentService.fetchStudnet(id);
+
 	}
-		
-	@PostMapping(path = {"/students"})
-	public List<Student> addStudents(@RequestBody List<Student> s){
-		
-		List<Student> allStudents = studentService.allStudents(s);
-		return allStudents;
+
+	@PostMapping(path = { "/students" })
+	public List<StudentDto> addStudents(@Valid @RequestBody List<StudentDto> s) {
+
+		return studentService.allStudents(s);
 	}
-	@PutMapping(path= {"/student"})
-	public Student updateStudent(@RequestBody Student s) {
-		
-		Student updateStudent = studentService.updateStudent(s);
-		return updateStudent;
+
+	@PutMapping(path = { "/student" })
+	public StudentDto updateStudent(@RequestParam(name = "rollNo") int id, @RequestBody StudentDto s) {
+
+		return studentService.updateStudent(s, id);
 	}
+
 	@GetMapping("/studentbyName/{name}")
-	public List<Student> findByName(@PathVariable(value = "name") String s){
-		List<Student> byName = studentService.findByName(s);
-		return byName;
+	public List<StudentDto> findByName(@PathVariable(value = "name") String s) {
+		return studentService.findByName(s);
 	}
-	/*
-	 * @GetMapping("/studentbyName") public List<Student>
-	 * findByAge(@RequestParam(name = "age1") int age1,@RequestParam(name = "age2")
-	 * int age2){ List<Student> byAge = studentService.findByAge(age1, age2); return
-	 * byAge;
-	 * 
-	 * }
-	 */
-	
+
 	@GetMapping("/studentbyName")
-	public List<Student> findByAge(@RequestParam(name = "age1") int age1,@RequestParam(name = "age2") int age2){
-		List<Student> byAge = studentService.findByAge(age1, age2);
-		return byAge;
-		
+	public List<StudentDto> findByAge(@RequestParam(name = "age1") int age1, @RequestParam(name = "age2") int age2) {
+
+		return studentService.findByAge(age1, age2);
+
 	}
-	@GetMapping(path = {"/student"},produces = {MediaType.APPLICATION_XML_VALUE},consumes = MediaType.ALL_VALUE)
-	public List<Student> fetchPage(@RequestParam(name = "pageNumber") int pageNumber,@RequestParam(name = "pageSize") int pageSize){
-		List<Student> fetchPage = studentService.fetchPage(pageNumber,pageSize);
-		return fetchPage;
+
+	@GetMapping(path = { "/student" }, produces = { MediaType.APPLICATION_XML_VALUE }, consumes = MediaType.ALL_VALUE)
+	public List<StudentDto> fetchPage(@RequestParam(name = "pageNumber") int pageNumber,
+			@RequestParam(name = "pageSize") int pageSize) {
+
+		return studentService.fetchPage(pageNumber, pageSize);
 	}
 }
 //@JacksonXmlRootElement --> for json response
