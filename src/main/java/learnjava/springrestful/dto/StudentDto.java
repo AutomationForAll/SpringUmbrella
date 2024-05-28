@@ -1,21 +1,16 @@
 package learnjava.springrestful.dto;
 
-import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
 import learnjava.springrestful.entities.Address;
-import learnjava.springrestful.entities.Student;
 import lombok.Data;
 @Data
 public class StudentDto {
 	
 	private int rollNo;
+	@NotNull(message = "Name can not be blank")
 	private String name;
 	private int age;
-	private Address address;
-	private List<Student> student;
-	
-	
-	
-	
+	private Address address;	
 
 }

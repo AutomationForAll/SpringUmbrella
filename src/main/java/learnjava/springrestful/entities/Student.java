@@ -5,6 +5,8 @@ import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +33,7 @@ public class Student {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "rollId")
 	private int rollNo;
 	@Column(name = "StudentName", columnDefinition = "varchar(50) default 'noName'")
 	@NotBlank(message = "Name can not be blank")
@@ -39,7 +42,7 @@ public class Student {
 	@NotNull(message = "Age can not be blank")
 	private int age;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "Address_id")
+	@JsonManagedReference
 	private Address address;
 
 	@CreationTimestamp

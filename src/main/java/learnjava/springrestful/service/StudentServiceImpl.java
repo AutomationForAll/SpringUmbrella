@@ -84,4 +84,9 @@ public class StudentServiceImpl implements StudentService {
 
 	}
 
+	@Override
+	public void deleteStudent(int id) {
+		studentDao.deleteById(id);
+	}
+
 }

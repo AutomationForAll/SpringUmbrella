@@ -6,7 +6,11 @@ import java.util.Optional;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,55 +36,53 @@ public class StudentController {
 	StudentServiceImpl studentService;
 
 	@PostMapping(path = { "/studnet" })
-	public StudentDto insertStudent(@Valid @RequestBody StudentDto studentDto) {
+	public ResponseEntity<StudentDto> insertStudent(@Valid @RequestBody StudentDto studentDto) {
+		return new ResponseEntity<StudentDto>(studentService.addStudent(studentDto), HttpStatus.CREATED);
 
-		StudentDto student = studentService.addStudent(studentDto);
-		return studentDto;
-
-	}
-
-	@GetMapping("/test")
-	public String getTest() {
-
-		return "this is the first";
 	}
 
 	@GetMapping("/student/{id}")
-	public List<StudentDto> getStudent(@PathVariable(value = "id") int id) {
-
-		return studentService.fetchStudnet(id);
+	public ResponseEntity<List<StudentDto>> getStudent(@PathVariable(value = "id") int id) {
+		return new ResponseEntity<List<StudentDto>>(studentService.fetchStudnet(id), HttpStatus.OK);
 
 	}
 
 	@PostMapping(path = { "/students" })
-	public List<StudentDto> addStudents(@Valid @RequestBody List<StudentDto> s) {
+	public ResponseEntity<List<StudentDto>> addStudents(@Valid @RequestBody List<StudentDto> s) {
+		return new ResponseEntity<List<StudentDto>>(studentService.allStudents(s), HttpStatus.CREATED);
 
-		return studentService.allStudents(s);
 	}
 
 	@PutMapping(path = { "/student" })
-	public StudentDto updateStudent(@RequestParam(name = "rollNo") int id, @RequestBody StudentDto s) {
+	public ResponseEntity<StudentDto> updateStudent(@RequestParam(name = "rollNo") int id, @RequestBody StudentDto s) {
+		return new ResponseEntity<StudentDto>(studentService.updateStudent(s, id), HttpStatus.ACCEPTED);
 
-		return studentService.updateStudent(s, id);
 	}
 
 	@GetMapping("/studentbyName/{name}")
-	public List<StudentDto> findByName(@PathVariable(value = "name") String s) {
-		return studentService.findByName(s);
+	public ResponseEntity<List<StudentDto>> findByName(@PathVariable(value = "name") String s) {
+		return new ResponseEntity<List<StudentDto>>(studentService.findByName(s), HttpStatus.OK);
+
 	}
 
 	@GetMapping("/studentbyName")
-	public List<StudentDto> findByAge(@RequestParam(name = "age1") int age1, @RequestParam(name = "age2") int age2) {
-
-		return studentService.findByAge(age1, age2);
+	public ResponseEntity<List<StudentDto>> findByAge(@RequestParam(name = "age1") int age1,
+			@RequestParam(name = "age2") int age2) {
+		return new ResponseEntity<List<StudentDto>>(studentService.findByAge(age1, age2), HttpStatus.OK);
 
 	}
 
 	@GetMapping(path = { "/student" }, produces = { MediaType.APPLICATION_XML_VALUE }, consumes = MediaType.ALL_VALUE)
-	public List<StudentDto> fetchPage(@RequestParam(name = "pageNumber") int pageNumber,
+	public ResponseEntity<List<StudentDto>> fetchPage(@RequestParam(name = "pageNumber") int pageNumber,
 			@RequestParam(name = "pageSize") int pageSize) {
+		return new ResponseEntity<List<StudentDto>>(studentService.fetchPage(pageNumber, pageSize), HttpStatus.OK);
 
-		return studentService.fetchPage(pageNumber, pageSize);
+	}
+
+	@DeleteMapping(path = { "/student" })
+	public ResponseEntity<String> deleteStudentById(@RequestParam(name = "id") int id) {
+		studentService.deleteStudent(id);
+		return new ResponseEntity<String>("Record deleted ", HttpStatus.NO_CONTENT);
 	}
 }
 //@JacksonXmlRootElement --> for json response

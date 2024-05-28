@@ -15,4 +15,5 @@ public interface StudentService {
 	public List<StudentDto> findByName(String s);
 	public List<StudentDto> findByAge(int age1,int age2);
 	public List<StudentDto> fetchPage(int pageNumber,int pageSize );
+	public void deleteStudent(int id);
 }
