@@ -10,6 +10,7 @@ public class StudentDto {
 	private int rollNo;
 	@NotNull(message = "Name can not be blank")
 	private String name;
+	@NotNull(message = "Age can not be blank")
 	private int age;
 	private Address address;	
 
